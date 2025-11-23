@@ -1,0 +1,30 @@
+# Default values for production
+
+config:
+  cluster:
+    enabled: true
+    replicas: 3
+  
+  jetstream:
+    enabled: true
+    fileStore:
+      enabled: true
+      pvc:
+        enabled: true
+        size: 10Gi
+
+service:
+  enabled: true
+  ports:
+    nats:
+      enabled: true
+    monitor:
+      enabled: true
+
+# Ensure we don't schedule on GPU nodes unless intended (though taints usually prevent this)
+# and try to spread across nodes
+podTemplate:
+  topologySpreadConstraints:
+    kubernetes.io/hostname:
+      maxSkew: 1
+      whenUnsatisfiable: ScheduleAnyway

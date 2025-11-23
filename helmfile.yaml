@@ -1,0 +1,18 @@
+releases:
+  - name: nats
+    namespace: nats
+    chart: ./helm/charts/nats
+    values:
+      - envs/prod/values.yaml
+    set:
+      # Service Configuration
+      - name: service.merge.spec.type
+        value: {{ env "SERVICE_TYPE" | default "LoadBalancer" }}
+      - name: service.merge.spec.loadBalancerIP
+        value: {{ env "LB_IP" | default "" }}
+      
+      # JetStream Configuration
+      - name: config.jetstream.enabled
+        value: "true"
+      - name: config.jetstream.fileStore.pvc.storageClassName
+        value: {{ env "STORAGE_CLASS" | default "local-path" }}
